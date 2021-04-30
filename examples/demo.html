@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片推拉</title>
+  <style>
+    .slide {
+      position: relative;
+      width: 800px;
+      height: 450px;
+      margin: 60px auto;
+      background-color: orange;
+      overflow: hidden;
+    }
+    .slide__inner {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 50%;
+      background-color: cyan;
+      overflow: hidden;
+    }
+    .slide__sash {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background-color: orange;
+      margin: -20px;
+      top: 50%;
+      left: 50%;
+    }
+    .ball {
+      position: fixed;
+      width: 48px;
+      height: 48px;
+      border-radius: 24px;
+      background-color: orangered;
+    }
+    .movable-panel {
+      position: fixed;
+      width: 420px;
+      top: 50%;
+      left: 60%;
+      border: 1px solid #333;
+      background-color: #fff;
+    }
+    .panel__title {
+      height: 42px;
+      font-size: 20px;
+      font-weight: bold;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      line-height: 42px;
+    }
+    .panel__content {
+      min-height: 160px;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .slide__inner img {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      max-width: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <img src="./alita-2.jpg">
+    <div class="slide__inner">
+      <img src="./alita-1.jpg" alt="">
+    </div>
+    <div class="slide__sash"></div>
+  </div>
+  <div class="ball"></div>
+  <div class="movable-panel">
+    <div class="panel__title">标题</div>
+    <div class="panel__content"></div>
+  </div>
+
+  <script src="../movable.js"></script>
+  <script>
+    // 获取 dom 元素
+    const container = document.querySelector('.slide');
+    const slider = document.querySelector('.slide__inner');
+    const handler = document.querySelector('.slide__sash');
+
+    // 左右拖拽
+    movable(handler, function(point) {
+      const rect = container.getBoundingClientRect();
+      const x = Math.min(Math.max(point.clientX - point.offsetX - rect.left + 20, 1), rect.width - 1);
+      handler.style.left = x + 'px';
+      slider.style.width = x + 'px';
+    });
+
+    // 可自由拖动的小球
+    movable(document.querySelector('.ball'));
+
+    // 可自由拖动的面板
+    const panel = document.querySelector('.movable-panel');
+    movable(document.querySelector('.panel__title'), function(point) {
+      const rect = panel.getBoundingClientRect();
+      panel.style.left = Math.min(Math.max(point.clientX - point.offsetX - 1, 0), window.innerWidth - rect.width) + 'px';
+      panel.style.top = Math.min(Math.max(point.clientY - point.offsetY - 1, 0), window.innerHeight - rect.height) + 'px';
+    });
+  </script>
+</body>
+</html>
